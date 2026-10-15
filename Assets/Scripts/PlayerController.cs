@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("References")]
     public Transform cameraTransform;
+    public Animator animator;
 
 
     //private variables
@@ -69,6 +70,11 @@ public class PlayerController : MonoBehaviour
         _sprintHeld = !_sprintHeld;
     }
 
+    public void OnInteract(InputValue value)
+    {
+        Debug.Log("Interact here");
+    }
+
 
 
     // Update is called once per frame
@@ -78,6 +84,7 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
         HandleJump();
         ApplyGravity();
+        UpdateAnimation();
     }
 
     void HandleMovement()
@@ -136,6 +143,14 @@ public class PlayerController : MonoBehaviour
     {
         _velocity.y += gravity * Time.deltaTime;
         _characterController.Move(new Vector3(0, _velocity.y, 0) * Time.deltaTime);
+    }
+
+    void UpdateAnimation()
+    {
+        if (animator == null) return;
+        float inputMagnitude = _moveInput.magnitude;
+        animator.SetFloat("Speed", inputMagnitude);
+        animator.SetBool("Jump", !_isGrounded);
     }
 
     private void OnDrawGizmos()
