@@ -70,10 +70,7 @@ public class PlayerController : MonoBehaviour
         _sprintHeld = !_sprintHeld;
     }
 
-    public void OnInteract(InputValue value)
-    {
-        Debug.Log("Interact here");
-    }
+    
 
 
 
