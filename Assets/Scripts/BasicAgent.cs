@@ -20,12 +20,13 @@ public class BasicAgent : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         //Check to see if we are in attack range
         if (!isAttacking && Vector3.Distance(transform.position, playerTarget.position) > 3)
         {
             agent.SetDestination(playerTarget.position);
         }
-        if (!isAttacking && Vector3.Distance(transform.position,playerTarget.position) < 3)
+        if (!isAttacking && Vector3.Distance(transform.position,playerTarget.position) < 3 && GameManager.Instance._gameOver == false)
         {
             isAttacking = true;
             StartCoroutine(Attack());

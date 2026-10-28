@@ -1,6 +1,8 @@
 using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,7 +17,7 @@ public class GameManager : MonoBehaviour
     public GameObject winPanel;
 
 
-    bool _gameOver = false;
+    public bool _gameOver = false;
 
     private void Awake()
     {
@@ -28,6 +30,7 @@ public class GameManager : MonoBehaviour
         Instance = this;
         //Use if you want game manager to persist between scenes
         DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(winPanel);
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -41,6 +44,7 @@ public class GameManager : MonoBehaviour
         if(winPanel != null)
         {
             winPanel.SetActive(false);
+
         }
         
     }
@@ -71,6 +75,7 @@ public class GameManager : MonoBehaviour
         {
             winPanel.SetActive(true);
             winPanel.GetComponentInChildren<TMP_Text>().text = $"You did it! You collected all {collectedPickups} items. Goal reached!";
+            RestartGame();
         }
     }
 
@@ -80,5 +85,23 @@ public class GameManager : MonoBehaviour
         {
             itemDisplay.text = $"Items: {collectedPickups}/{totalPickups}";
         }
+    }
+
+    public void RestartGame()
+    {
+        StartCoroutine(Restart());
+    }
+
+    IEnumerator Restart()
+    {
+        yield return new WaitForSeconds(4.0f);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        yield return new WaitForSeconds(0.1f);
+        itemDisplay = GameObject.Find("Pickups").GetComponent<TMP_Text>();
+        winPanel = GameObject.Find("WinPanel");
+        winPanel.SetActive(false);
+        collectedPickups = 0;
+        UpdateUI();
+        _gameOver = false;
     }
 }
