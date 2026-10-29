@@ -95,6 +95,7 @@ public class GameManager : MonoBehaviour
     IEnumerator Restart()
     {
         yield return new WaitForSeconds(4.0f);
+        _gameOver = false;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         yield return new WaitForSeconds(0.1f);
         itemDisplay = GameObject.Find("Pickups").GetComponent<TMP_Text>();
@@ -102,6 +103,6 @@ public class GameManager : MonoBehaviour
         winPanel.SetActive(false);
         collectedPickups = 0;
         UpdateUI();
-        _gameOver = false;
+        
     }
 }
