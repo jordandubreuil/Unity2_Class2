@@ -87,7 +87,7 @@ public class PlayerController : MonoBehaviour
         HandleJump();
         ApplyGravity();
         UpdateAnimation();
-        UpdatePlatfromParent();
+        UpdatePlatformParent();
     }
 
     void HandleMovement()
@@ -141,7 +141,7 @@ public class PlayerController : MonoBehaviour
         _jumpPressed = false;
     }
 
-    void UpdatePlatfromParent()
+    void UpdatePlatformParent()
     {
         if (_isJumping || _velocity.y > 0f)
         {
@@ -150,7 +150,7 @@ public class PlayerController : MonoBehaviour
         }
 
         //Check to see if we are on a platform
-        if (Physics.SphereCast(groundCheck.position, groundDistance/2, Vector3.down, out RaycastHit hit,groundDistance, groundMask, QueryTriggerInteraction.Ignore))
+        if (Physics.SphereCast(groundCheck.position + Vector3.up * 0.3f, 0.1f, Vector3.down, out RaycastHit hit,0.6f, groundMask, QueryTriggerInteraction.Ignore))
         {
             //Here is where we check to see which platform we are on
             //Debug.Log(hit.collider.name);
