@@ -33,6 +33,10 @@ public class PlayerController : MonoBehaviour
     bool _jumpPressed;
     float _rotationVelocity;
 
+    [Header("Platfrom Variables")]
+    public Transform platform;
+    Transform originalParent;
+
 
 
     private void Awake()
@@ -44,6 +48,7 @@ public class PlayerController : MonoBehaviour
         {
             cameraTransform = Camera.main.transform;
         }
+        originalParent = transform.parent;
     }
 
     // Set up inputs via messaging
@@ -82,6 +87,7 @@ public class PlayerController : MonoBehaviour
         HandleJump();
         ApplyGravity();
         UpdateAnimation();
+        UpdatePlatfromParent();
     }
 
     void HandleMovement()
@@ -133,6 +139,40 @@ public class PlayerController : MonoBehaviour
         }
 
         _jumpPressed = false;
+    }
+
+    void UpdatePlatfromParent()
+    {
+        if (_isJumping || _velocity.y > 0f)
+        {
+            SetPlatform(null);
+            return;
+        }
+
+        //Check to see if we are on a platform
+        if (Physics.SphereCast(groundCheck.position, 2f, Vector3.down, out RaycastHit hit, 4f, groundMask, QueryTriggerInteraction.Ignore))
+        {
+            //Here is where we check to see which platform we are on
+            //Debug.Log(hit.collider.name);
+            BasicPlatform loopingPlatform = hit.collider.GetComponent<BasicPlatform>();
+
+            if (loopingPlatform != null && loopingPlatform.isActiveAndEnabled)
+            {
+                //Debug.Log(loopingPlatform);
+                SetPlatform(loopingPlatform.transform);
+                return;
+            }
+        }
+        SetPlatform(null);
+    }
+
+    void SetPlatform(Transform newPlatform)
+    {
+        if (platform == newPlatform) return;
+        platform = newPlatform;
+        Debug.Log(newPlatform);
+        transform.SetParent(platform != null ? platform : originalParent, true);
+
     }
 
     /// <summary>
