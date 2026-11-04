@@ -150,11 +150,11 @@ public class PlayerController : MonoBehaviour
         }
 
         //Check to see if we are on a platform
-        if (Physics.SphereCast(groundCheck.position, 2f, Vector3.down, out RaycastHit hit, 4f, groundMask, QueryTriggerInteraction.Ignore))
+        if (Physics.SphereCast(groundCheck.position, groundDistance/2, Vector3.down, out RaycastHit hit,groundDistance, groundMask, QueryTriggerInteraction.Ignore))
         {
             //Here is where we check to see which platform we are on
             //Debug.Log(hit.collider.name);
-            BasicPlatform loopingPlatform = hit.collider.GetComponent<BasicPlatform>();
+            BasicPlatform loopingPlatform = hit.collider.GetComponentInParent<BasicPlatform>();
 
             if (loopingPlatform != null && loopingPlatform.isActiveAndEnabled)
             {
