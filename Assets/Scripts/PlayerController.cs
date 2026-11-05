@@ -36,6 +36,7 @@ public class PlayerController : MonoBehaviour
     [Header("Platfrom Variables")]
     public Transform platform;
     Transform originalParent;
+    ReactivePlatform riddenPlatform;
 
 
 
@@ -154,6 +155,17 @@ public class PlayerController : MonoBehaviour
         {
             //Here is where we check to see which platform we are on
             //Debug.Log(hit.collider.name);
+
+            ReactivePlatform reactivePlatform = hit.collider.GetComponentInParent<ReactivePlatform>();
+
+            if(reactivePlatform != null && reactivePlatform.isActiveAndEnabled)
+            {
+                SetPlatform(reactivePlatform.MovingTransform);
+                reactivePlatform.ActivatePlatform();
+                return;
+
+            }
+
             BasicPlatform loopingPlatform = hit.collider.GetComponentInParent<BasicPlatform>();
 
             if (loopingPlatform != null && loopingPlatform.isActiveAndEnabled)
@@ -169,9 +181,21 @@ public class PlayerController : MonoBehaviour
     void SetPlatform(Transform newPlatform)
     {
         if (platform == newPlatform) return;
+
+        if(riddenPlatform != null)
+        {
+            riddenPlatform.PlayerLeft();
+        }
+
         platform = newPlatform;
+        riddenPlatform = platform != null ? platform.GetComponentInParent<ReactivePlatform>() : null;
         Debug.Log(newPlatform);
         transform.SetParent(platform != null ? platform : originalParent, true);
+
+        if (riddenPlatform != null) 
+        {
+            riddenPlatform.PlayerBoarded();
+        }
 
     }
 
